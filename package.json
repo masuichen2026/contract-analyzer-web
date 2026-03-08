@@ -1,0 +1,28 @@
+{
+  "name": "contract-analyzer-web",
+  "version": "1.0.0",
+  "description": "企业合同智能分析系统 - 基于AI的合同风险识别与红线条款核查",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "contract",
+    "analysis",
+    "AI",
+    "risk",
+    "legal"
+  ],
+  "author": "OpenClaw AI",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

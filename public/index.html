@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业合同智能分析系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a365d;
+            --primary-blue: #2c5282;
+            --accent-gold: #d69e2e;
+            --accent-gold-light: #f6e05e;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --bg-light: #f7fafc;
+            --bg-white: #ffffff;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        }
+
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .gradient-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+        }
+
+        .gold-border {
+            border: 2px solid var(--accent-gold);
+        }
+
+        .gold-text {
+            color: var(--accent-gold);
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(44, 82, 130, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(214, 158, 46, 0.3);
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--primary-blue);
+            background: linear-gradient(135deg, rgba(44, 82, 130, 0.05) 0%, rgba(26, 54, 93, 0.05) 100%);
+            transition: all 0.3s ease;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--accent-gold);
+            background: linear-gradient(135deg, rgba(214, 158, 46, 0.1) 0%, rgba(246, 224, 94, 0.05) 100%);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--accent-gold);
+            background: linear-gradient(135deg, rgba(214, 158, 46, 0.2) 0%, rgba(246, 224, 94, 0.1) 100%);
+        }
+
+        .result-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(44, 82, 130, 0.2);
+            border-top: 4px solid var(--accent-gold);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: rgba(214, 158, 46, 0.05);
+        }
+
+        .risk-high {
+            color: #c53030;
+            font-weight: 600;
+        }
+
+        .risk-medium {
+            color: #d69e2e;
+            font-weight: 600;
+        }
+
+        .risk-low {
+            color: #2f855a;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background-color: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-warning {
+            background-color: #fefcbf;
+            color: #744210;
+        }
+
+        .status-danger {
+            background-color: #fed7d7;
+            color: #742a2a;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="gradient-header text-white py-8 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="font-display text-4xl font-bold mb-2">企业合同智能分析系统</h1>
+                    <p class="text-lg opacity-90">基于AI的合同风险识别与红线条款核查</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm opacity-75">Powered by</div>
+                    <div class="text-xl font-semibold">OpenClaw AI</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <!-- Upload Section -->
+        <section id="upload-section" class="mb-12 fade-in">
+            <div class="result-section card-shadow p-8">
+                <h2 class="font-display text-2xl font-bold mb-6 text-gray-800">上传合同文件</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Primary Contract Upload -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-gray-700">客户合同文件 *</h3>
+                        <div id="contract-upload" class="upload-zone rounded-lg p-8 text-center cursor-pointer">
+                            <input type="file" id="contract-file" accept=".pdf,.doc,.docx,.md" class="hidden">
+                            <div class="text-gray-500 mb-2">
+                                <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <p class="text-gray-600 font-medium">点击或拖拽文件到此处</p>
+                            <p class="text-sm text-gray-500 mt-1">支持 PDF, DOC, DOCX, MD 格式</p>
+                        </div>
+                        <div id="contract-filename" class="mt-2 text-sm text-gray-600"></div>
+                    </div>
+
+                    <!-- Standard Contract Upload -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-gray-700">公司标准合同（可选）</h3>
+                        <div id="standard-upload" class="upload-zone rounded-lg p-8 text-center cursor-pointer">
+                            <input type="file" id="standard-file" accept=".pdf,.doc,.docx,.md" class="hidden">
+                            <div class="text-gray-500 mb-2">
+                                <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <p class="text-gray-600 font-medium">点击或拖拽文件到此处</p>
+                            <p class="text-sm text-gray-500 mt-1">使用默认标准合同</p>
+                        </div>
+                        <div id="standard-filename" class="mt-2 text-sm text-gray-600"></div>
+                    </div>
+                </div>
+
+                <!-- Redline Clauses Upload -->
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-700">红线条款清单（可选）</h3>
+                    <div id="redline-upload" class="upload-zone rounded-lg p-8 text-center cursor-pointer">
+                        <input type="file" id="redline-file" accept=".pdf,.doc,.docx,.md" class="hidden">
+                        <div class="text-gray-500 mb-2">
+                            <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-gray-600 font-medium">点击或拖拽文件到此处</p>
+                        <p class="text-sm text-gray-500 mt-1">使用默认红线条款清单</p>
+                    </div>
+                    <div id="redline-filename" class="mt-2 text-sm text-gray-600"></div>
+                </div>
+
+                <!-- Analyze Button -->
+                <div class="mt-8 text-center">
+                    <button id="analyze-btn" class="btn-primary text-white px-12 py-4 rounded-lg font-semibold text-lg">
+                        开始分析
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Section -->
+        <section id="loading-section" class="hidden mb-12">
+            <div class="result-section card-shadow p-12 text-center">
+                <div class="loading-spinner mx-auto mb-4"></div>
+                <p class="text-xl font-semibold text-gray-800">正在分析合同...</p>
+                <p class="text-gray-600 mt-2">这可能需要几秒钟时间</p>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="hidden">
+            <!-- Results will be dynamically inserted here -->
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="gradient-header text-white py-6 px-6 mt-12">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="opacity-75">企业合同智能分析系统 © 2026 | 安全 · 可靠 · 专业</p>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

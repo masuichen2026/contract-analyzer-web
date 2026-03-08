@@ -1,0 +1,17 @@
+# 用户配置文件（敏感信息）
+# ⚠️ 重要：此文件包含敏感信息，部署完成后请删除或修改密码！
+
+# GitHub 账号
+GITHUB_EMAIL=469380464@qq.com
+GITHUB_USERNAME=469380464
+GITHUB_TOKEN=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
+
+# Vercel 账号
+VERCEL_EMAIL=469380464@qq.com
+VERCEL_PASSWORD=+++999czy
+
+# 仓库名称
+REPO_NAME=contract-analyzer-web
+
+# 系统信息
+OS=Windows 11
